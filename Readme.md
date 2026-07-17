@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Ержан](https://up.htmlacademy.ru/javascript-individual/3/user/168235).
-* Наставник: `Анастасия Гущина`.
+* Наставник: [Анастасия Гущина](http://htmlacademy.ru/profile/vanastasiya).
 
 ---
 
