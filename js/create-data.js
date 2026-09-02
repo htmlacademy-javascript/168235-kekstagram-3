@@ -20,7 +20,7 @@ import {
 // генераторы уникальных идентификаторов фотографий и комментариев
 const getCommentId = createIdGenerator();
 const getPhotoId = createIdGenerator();
-const getRandomDescription = () => getRandomArrayElement(PHOTO_DESCRIPTIONS);
+const getPhotoDescription = (id) => PHOTO_DESCRIPTIONS[id - 1];
 const getRandomCommentMessage = () => {
   const firstMessage = getRandomArrayElement(COMMENTS);
 
@@ -50,7 +50,7 @@ const createPhoto = () => {
   const id = getPhotoId();
 
   const url = `photos/${id}.jpg`;
-  const description = getRandomDescription();
+  const description = getPhotoDescription(id);
   const likes = getRandomInteger(MIN_LIKES, MAX_LIKES);
   const commentsCount = getRandomInteger(MIN_COMMENTS, MAX_COMMENTS);
   const comments = Array.from({ length: commentsCount }, () => getComment());
