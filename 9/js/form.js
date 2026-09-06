@@ -1,4 +1,3 @@
-import {resetScale} from './scale.js';
 // Получаем элементы формы загрузки изображения
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFileInput = uploadForm.querySelector('.img-upload__input');
@@ -87,11 +86,9 @@ function closeUploadForm() {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   uploadForm.reset();
-  resetScale();
   document.removeEventListener('keydown', onDocumentKeydown);
   // Очистить ошибки валидации и сбросить классы CSS
   pristine.reset();
-
 }
 
 // функция открытия формы загрузки изображения
