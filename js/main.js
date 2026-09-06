@@ -1,6 +1,7 @@
 import {createPhotos} from './create-data.js';
 import {renderPictures} from './pictures.js';
 import {openBigPicture} from './big-picture.js';
+import './form.js';
 
 // Создаём один общий массив данных для миниатюр и полноразмерного окна.
 const photos = createPhotos();
