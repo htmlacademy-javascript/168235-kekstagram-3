@@ -1,4 +1,5 @@
 import {resetScale} from './scale.js';
+import {resetEffects} from './effects.js';
 // Получаем элементы формы загрузки изображения
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFileInput = uploadForm.querySelector('.img-upload__input');
@@ -88,6 +89,7 @@ function closeUploadForm() {
   document.body.classList.remove('modal-open');
   uploadForm.reset();
   resetScale();
+  resetEffects();
   document.removeEventListener('keydown', onDocumentKeydown);
   // Очистить ошибки валидации и сбросить классы CSS
   pristine.reset();
