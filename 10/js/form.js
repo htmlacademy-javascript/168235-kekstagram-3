@@ -100,7 +100,6 @@ function closeUploadForm() {
   document.removeEventListener('keydown', onDocumentKeydown);
   // Очистить ошибки валидации и сбросить классы CSS
   pristine.reset();
-
 }
 
 // функция открытия формы загрузки изображения
