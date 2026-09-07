@@ -1,5 +1,16 @@
 import {resetScale} from './scale.js';
 import {resetEffects} from './effects.js';
+// создаем регулярное выражение для проверки хэштегов
+const HASHTAG_PATTERN = /^#[а-яёa-z0-9]{1,19}$/i;
+// константы для валидации формы
+const MAX_HASHTAGS_COUNT = 5;
+const MAX_DESCRIPTION_LENGTH = 140;
+// константы ошибок валидации хэштегов
+const ERROR_INVALID_HASHTAG = 'Введён невалидный хэштег';
+const ERROR_HASHTAGS_COUNT = `Количество хэштегов не может превышать ${MAX_HASHTAGS_COUNT}`;
+const ERROR_UNIQUE_HASHTAGS = 'Хэштеги не должны повторяться';
+// константа ошибки валидации описания
+const ERROR_DESCRIPTION_LENGTH = `Длина комментария не может составлять больше ${MAX_DESCRIPTION_LENGTH} символов`;
 // Получаем элементы формы загрузки изображения
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFileInput = uploadForm.querySelector('.img-upload__input');
@@ -13,8 +24,6 @@ const pristine = new Pristine(uploadForm, {
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__field-wrapper--error'
 });
-// создаем регулярное выражение для проверки хэштегов
-const hashtagPattern = /^#[а-яёa-z0-9]{1,19}$/i;
 
 //преобразование строки в массив
 const getHashtags = (value) => value.trim().toLowerCase().split(/\s+/).filter((tag) => tag !== '');
@@ -25,7 +34,7 @@ const validateHashtags = (value) => {
     return true; // пустая строка допустима;
   }
   const tags = getHashtags(value);
-  return tags.every((tag) => hashtagPattern.test(tag));
+  return tags.every((tag) => HASHTAG_PATTERN.test(tag));
 };
 
 // функция проверки уникальности хэштегов
@@ -35,44 +44,42 @@ const areHashtagsUnique = (value) => {
   return uniqueTags.size === tags.length;
 };
 
-// максимальное количество хэштегов
-const maxHashtagsCount = 5;
+// проверка на максимальное количество хэштегов
 const isHashtagsCountValid = (value) => {
   const tags = getHashtags(value);
-  return tags.length <= maxHashtagsCount;
+  return tags.length <= MAX_HASHTAGS_COUNT;
 };
 // поле описания
 const descriptionInput = uploadForm.querySelector('.text__description');
 // константы для валидации формы
-const maxDescriptionLength = 140;
-const isDescriptionValid = (description) => description.length <= maxDescriptionLength;
+const isDescriptionValid = (description) => description.length <= MAX_DESCRIPTION_LENGTH;
 
 // проверка валидности описания
 pristine.addValidator(
   descriptionInput,
   isDescriptionValid,
-  `Длина комментария не может составлять больше ${maxDescriptionLength} символов`
+  ERROR_DESCRIPTION_LENGTH
 );
 
 // проверка валидности хэштегов
 pristine.addValidator(
   hashtagsInput,
   validateHashtags,
-  'Введён невалидный хэштег'
+  ERROR_INVALID_HASHTAG
 );
 
 // проверка количества хэштегов
 pristine.addValidator(
   hashtagsInput,
   isHashtagsCountValid,
-  `Количество хэштегов не может превышать ${maxHashtagsCount}`
+  ERROR_HASHTAGS_COUNT
 );
 
 // проверка уникальности хэштегов
 pristine.addValidator(
   hashtagsInput,
   areHashtagsUnique,
-  'Хэштеги не должны повторяться'
+  ERROR_UNIQUE_HASHTAGS
 );
 
 // Закрываем окно только при нажатии клавиши Escape.
