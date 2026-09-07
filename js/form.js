@@ -1,3 +1,5 @@
+import {resetScale} from './scale.js';
+import {resetEffects} from './effects.js';
 // создаем регулярное выражение для проверки хэштегов
 const HASHTAG_PATTERN = /^#[а-яёa-z0-9]{1,19}$/i;
 // константы для валидации формы
@@ -93,6 +95,8 @@ function closeUploadForm() {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   uploadForm.reset();
+  resetScale();
+  resetEffects();
   document.removeEventListener('keydown', onDocumentKeydown);
   // Очистить ошибки валидации и сбросить классы CSS
   pristine.reset();
