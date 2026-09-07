@@ -31,7 +31,7 @@ scaleControlBigger.addEventListener('click', () => {
 
 // Сброс масштаба при закрытии формы
 const resetScale = () => {
-  scaleControlValue.value = '100%';
+  scaleControlValue.value = `${MAX_SCALE}%`;
   imgUploadPreview.style.transform = `scale(${MAX_SCALE / 100})`;
 };
 
