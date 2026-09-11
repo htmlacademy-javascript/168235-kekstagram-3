@@ -1,5 +1,7 @@
 import {resetScale} from './scale.js';
 import {resetEffects} from './effects.js';
+import {sendData} from './api.js';
+import {showSuccess, showError} from './utils.js';
 // создаем регулярное выражение для проверки хэштегов
 const HASHTAG_PATTERN = /^#[а-яёa-z0-9]{1,19}$/i;
 // константы для валидации формы
@@ -17,6 +19,8 @@ const uploadFileInput = uploadForm.querySelector('.img-upload__input');
 const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 const uploadCancelButton = uploadForm.querySelector('.img-upload__cancel');
 const hashtagsInput = uploadForm.querySelector('.text__hashtags');
+const uploadSubmitButton = uploadForm.querySelector('.img-upload__submit');
+
 
 // Подключаем библиотеку Pristine для валидации формы. Она уже подключена в index.html, поэтому здесь мы просто создаём экземпляр.
 const pristine = new Pristine(uploadForm, {
@@ -100,6 +104,7 @@ function closeUploadForm() {
   document.removeEventListener('keydown', onDocumentKeydown);
   // Очистить ошибки валидации и сбросить классы CSS
   pristine.reset();
+
 }
 
 // функция открытия формы загрузки изображения
@@ -127,8 +132,22 @@ descriptionInput.addEventListener('keydown', onInputEscapeKeydown);
 
 // обработчик события отправки формы
 uploadForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
   const isValid = pristine.validate();
   if (!isValid) {
-    evt.preventDefault();
+    return;
   }
+  const formData = new FormData(uploadForm);
+  uploadSubmitButton.disabled = true;
+  sendData(formData)
+    .then(() => {
+      closeUploadForm();
+      showSuccess();
+    })
+    .catch(
+      showError
+    )
+    .finally(() => {
+      uploadSubmitButton.disabled = false;
+    });
 });
