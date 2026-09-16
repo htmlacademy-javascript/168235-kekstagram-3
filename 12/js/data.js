@@ -1,4 +1,4 @@
-export const COMMENTATOR_NAMES = [
+const COMMENTATOR_NAMES = [
   'Иван',
   'Алихан',
   'Айсултан',
@@ -26,7 +26,7 @@ export const COMMENTATOR_NAMES = [
   'Арлан',
 ];
 // массив комментариев к фотографиям
-export const COMMENTS = [
+const COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -35,7 +35,7 @@ export const COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 // массив описаний фотографий
-export const PHOTO_DESCRIPTIONS = [
+const PHOTO_DESCRIPTIONS = [
   'Пруд в парке',
   'Указатель на дороге',
   'Пляж на острове',
@@ -62,11 +62,13 @@ export const PHOTO_DESCRIPTIONS = [
   'Концерт на сцене',
   'Белый внедорожник проезжающий мимо бегемота'
 ];
-export const PHOTOS_COUNT = 25;
-export const MIN_LIKES = 15;
-export const MAX_LIKES = 200;
-export const MIN_COMMENTS = 0;
-export const MAX_COMMENTS = 30;
-export const MIN_AVATAR_NUMBER = 1;
-export const AVATARS_COUNT = 6; // количество аватаров
-export const AVATAR_PATH = 'img/avatar-'; // путь к аватару
+const PHOTOS_COUNT = 25;
+const MIN_LIKES = 15;
+const MAX_LIKES = 200;
+const MIN_COMMENTS = 0;
+const MAX_COMMENTS = 30;
+const MIN_AVATAR_NUMBER = 1;
+const AVATARS_COUNT = 6; // количество аватаров
+const AVATAR_PATH = 'img/avatar-'; // путь к аватару
+
+export {COMMENTATOR_NAMES, COMMENTS, PHOTO_DESCRIPTIONS, PHOTOS_COUNT, MIN_LIKES, MAX_LIKES, MIN_COMMENTS, MAX_COMMENTS, MIN_AVATAR_NUMBER, AVATARS_COUNT, AVATAR_PATH};
