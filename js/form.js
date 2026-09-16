@@ -20,8 +20,9 @@ const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 const uploadCancelButton = uploadForm.querySelector('.img-upload__cancel');
 const hashtagsInput = uploadForm.querySelector('.text__hashtags');
 const uploadSubmitButton = uploadForm.querySelector('.img-upload__submit');
-
-
+const uploadPreview = uploadForm.querySelector('.img-upload__preview img');
+const effectPreviews = uploadForm.querySelectorAll('.effects__preview');
+let imageUrl = null;
 // Подключаем библиотеку Pristine для валидации формы. Она уже подключена в index.html, поэтому здесь мы просто создаём экземпляр.
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -104,11 +105,23 @@ function closeUploadForm() {
   document.removeEventListener('keydown', onDocumentKeydown);
   // Очистить ошибки валидации и сбросить классы CSS
   pristine.reset();
-
+  if (imageUrl) {
+    URL.revokeObjectURL(imageUrl);
+    imageUrl = null;
+  }
 }
 
 // функция открытия формы загрузки изображения
 const openUploadForm = () => {
+  const file = uploadFileInput.files[0];
+  if (!file) {
+    return;
+  }
+  imageUrl = URL.createObjectURL(file);
+  uploadPreview.src = imageUrl;
+  effectPreviews.forEach((effectPreview) => {
+    effectPreview.style.backgroundImage = `url("${imageUrl}")`;
+  });
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
