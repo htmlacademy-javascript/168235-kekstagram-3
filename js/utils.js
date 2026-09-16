@@ -80,4 +80,12 @@ const showError = () => {
   document.body.append(errorFragment);
 };
 
-export {getRandomArrayElement, showDataError, getRandomInteger, createIdGenerator, showSuccess, showError};
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export {getRandomArrayElement, showDataError, getRandomInteger, createIdGenerator, showSuccess, showError, debounce};

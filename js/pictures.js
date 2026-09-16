@@ -4,6 +4,10 @@ const pictureTemplate = document.querySelector('#picture').content.querySelector
 
 // onPictureClick — функция, которую нужно вызвать после клика по миниатюре.
 const renderPictures = (pictures, onPictureClick) => {
+  const pictureElements = picturesContainer.querySelectorAll('.picture');
+  pictureElements.forEach((pictureElement) => {
+    pictureElement.remove();
+  });
   // Фрагмент позволяет добавить все миниатюры в DOM за один раз.
   const picturesFragment = document.createDocumentFragment();
 
