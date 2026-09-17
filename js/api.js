@@ -1,6 +1,6 @@
 
 const API_URL = 'https://32.javascript.htmlacademy.pro/kekstagram/data';
-const API_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram';
+const API_URL_UPLOAD = 'https://32.javascript.htmlacademy.pro/kekstagram/';
 
 const getData = (onSuccess, onError) => fetch(API_URL)
   .then((response) => {
