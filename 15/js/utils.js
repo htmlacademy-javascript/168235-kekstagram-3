@@ -6,16 +6,7 @@ const getRandomInteger = (min, max) => {
   const result = Math.random() * (upper - lower + 1) + lower;
   return Math.floor(result);
 };
-// функция для создания уникального идентификатора
-const createIdGenerator = () => {
-  let lastGeneratedId = 0;
-  return () => {
-    lastGeneratedId += 1;
-    return lastGeneratedId;
-  };
-};
-// функция для получения случайного элемента массива
-const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
+
 //Функция показа сообщения ошибки загрузки фото с сервера
 const showDataError = () => {
   const errorTemplate = document.querySelector('#data-error');
@@ -88,4 +79,4 @@ const debounce = (callback, timeoutDelay = 500) => {
   };
 };
 
-export {getRandomArrayElement, showDataError, getRandomInteger, createIdGenerator, showSuccess, showError, debounce};
+export {showDataError, getRandomInteger, showSuccess, showError, debounce};

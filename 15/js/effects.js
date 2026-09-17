@@ -65,7 +65,7 @@ noUiSlider.create(sliderElement, {
 sliderElement.noUiSlider.on('update', () => {
   const selectedEffect = document.querySelector('.effects__radio:checked').value;
   const config = EFFECTS_CONFIG[selectedEffect];
-  const sliderValue = sliderElement.noUiSlider.get();
+  const sliderValue = Number(sliderElement.noUiSlider.get());
   if (selectedEffect === 'none') {
     sliderContainer.classList.add('hidden');
     imgUploadPreview.style.filter = '';
