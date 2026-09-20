@@ -1,41 +1,41 @@
 // Находим полноразмерное окно и все элементы, данные которых будут меняться.
 const COMMENTS_PER_PORTION = 5;
 const AVATAR_SIZE = 35;
-const bigPicture = document.querySelector('.big-picture');
-const bigPictureImage = bigPicture.querySelector('.big-picture__img img');
-const likesCount = bigPicture.querySelector('.likes-count');
-const shownCommentsCount = bigPicture.querySelector('.social__comment-shown-count');
-const totalCommentsCount = bigPicture.querySelector('.social__comment-total-count');
-const commentsList = bigPicture.querySelector('.social__comments');
-const caption = bigPicture.querySelector('.social__caption');
-const commentsCount = bigPicture.querySelector('.social__comment-count');
-const commentsLoader = bigPicture.querySelector('.comments-loader');
-const closeButton = bigPicture.querySelector('.big-picture__cancel');
+const bigPictureElement = document.querySelector('.big-picture');
+const bigPictureImageElement = bigPictureElement.querySelector('.big-picture__img img');
+const likesCountElement = bigPictureElement.querySelector('.likes-count');
+const shownCommentsCountElement = bigPictureElement.querySelector('.social__comment-shown-count');
+const totalCommentsCountElement = bigPictureElement.querySelector('.social__comment-total-count');
+const commentsListElement = bigPictureElement.querySelector('.social__comments');
+const captionElement = bigPictureElement.querySelector('.social__caption');
+const commentsCountElement = bigPictureElement.querySelector('.social__comment-count');
+const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
+const closeButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
 let currentComments = [];
 let renderedCommentsCount = 0;
 
 // Создаём DOM-элемент одного комментария из переданного объекта.
 const createComment = ({avatar, name, message}) => {
-  const comment = document.createElement('li');
-  const picture = document.createElement('img');
-  const text = document.createElement('p');
+  const commentElement = document.createElement('li');
+  const pictureElement = document.createElement('img');
+  const textElement = document.createElement('p');
 
-  comment.classList.add('social__comment');
+  commentElement.classList.add('social__comment');
 
-  picture.classList.add('social__picture');
-  picture.src = avatar;
-  picture.alt = name;
-  picture.width = AVATAR_SIZE;
-  picture.height = AVATAR_SIZE;
+  pictureElement.classList.add('social__picture');
+  pictureElement.src = avatar;
+  pictureElement.alt = name;
+  pictureElement.width = AVATAR_SIZE;
+  pictureElement.height = AVATAR_SIZE;
 
-  text.classList.add('social__text');
+  textElement.classList.add('social__text');
   // textContent вставляет сообщение как текст и не интерпретирует его как HTML.
-  text.textContent = message;
+  textElement.textContent = message;
 
   // Собираем готовую структуру <li>: сначала аватар, затем текст комментария.
-  comment.append(picture, text);
+  commentElement.append(pictureElement, textElement);
 
-  return comment;
+  return commentElement;
 };
 
 // Создаём список комментариев выбранной фотографии.
@@ -47,15 +47,15 @@ const renderComments = (comments) => {
     commentsFragment.append(createComment(comment));
   });
 
-  commentsList.append(commentsFragment);
+  commentsListElement.append(commentsFragment);
 };
 
 const renderNextComments = () => {
   const nextComments = currentComments.slice(renderedCommentsCount, renderedCommentsCount + COMMENTS_PER_PORTION);
   renderComments(nextComments);
   renderedCommentsCount += nextComments.length;
-  shownCommentsCount.textContent = renderedCommentsCount;
-  commentsLoader.classList.toggle(
+  shownCommentsCountElement.textContent = renderedCommentsCount;
+  commentsLoaderElement.classList.toggle(
     'hidden',
     renderedCommentsCount >= currentComments.length
   );
@@ -72,7 +72,7 @@ const onDocumentKeydown = (evt) => {
 
 function closeBigPicture() {
   // Скрываем окно и снова разрешаем прокрутку основной страницы.
-  bigPicture.classList.add('hidden');
+  bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   // Обработчик клавиатуры нужен только пока полноразмерное окно открыто.
   document.removeEventListener('keydown', onDocumentKeydown);
@@ -83,24 +83,24 @@ const openBigPicture = ({url, description, likes, comments}) => {
   currentComments = comments;
   renderedCommentsCount = 0;
   // Сначала заменяем всё содержимое, чтобы пользователь не увидел старые данные.
-  bigPictureImage.src = url;
-  bigPictureImage.alt = description;
-  likesCount.textContent = likes;
-  totalCommentsCount.textContent = comments.length;
-  caption.textContent = description;
-  commentsList.replaceChildren();
+  bigPictureImageElement.src = url;
+  bigPictureImageElement.alt = description;
+  likesCountElement.textContent = likes;
+  totalCommentsCountElement.textContent = comments.length;
+  captionElement.textContent = description;
+  commentsListElement.replaceChildren();
   renderNextComments();
-  commentsCount.classList.remove('hidden');
+  commentsCountElement.classList.remove('hidden');
 
   // Показываем окно, запрещаем прокрутку фона и включаем закрытие по Escape.
-  bigPicture.classList.remove('hidden');
+  bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
 };
 const onCommentsLoaderClick = () => renderNextComments();
-commentsLoader.addEventListener('click', onCommentsLoaderClick);
+commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
 const onBigPictureCancelClick = () => closeBigPicture();
 // Кнопка существует всё время жизни страницы, поэтому обработчик ставится один раз.
-closeButton.addEventListener('click', onBigPictureCancelClick);
+closeButtonElement.addEventListener('click', onBigPictureCancelClick);
 
 export {openBigPicture};

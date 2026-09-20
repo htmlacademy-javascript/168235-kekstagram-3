@@ -1,5 +1,5 @@
 // Объект с конфигурацией для каждого эффекта
-const EFFECTS_CONFIG = {
+const EFFECT_OPTIONS = {
   none: {
     range: { min: 0, max: 1 },
     start: 1,
@@ -48,18 +48,18 @@ const sliderElement = document.querySelector('.effect-level__slider');
 // Поле, в котором отображается текущее значение слайдера
 const sliderLevelElement = document.querySelector('.effect-level__value');
 // Изображение, к которому применяется эффект
-const imgUploadPreview = document.querySelector('.img-upload__preview img');
+const imgUploadPreviewElement = document.querySelector('.img-upload__preview img');
 //  список эффектов, которые можно применить к изображению
-const effectsList = document.querySelector('.effects__list');
+const effectsListElement = document.querySelector('.effects__list');
 // контейнер слайдера, который будет скрываться при выборе эффекта "Оригинал"
-const sliderContainer = document.querySelector('.img-upload__effect-level');
+const sliderContainerElement = document.querySelector('.img-upload__effect-level');
 
 let selectedEffect = 'none';
 // Создаём слайдер с помощью noUiSlider
 noUiSlider.create(sliderElement, {
-  range: EFFECTS_CONFIG.none.range,
-  start: EFFECTS_CONFIG.none.start,
-  step: EFFECTS_CONFIG.none.step,
+  range: EFFECT_OPTIONS.none.range,
+  start: EFFECT_OPTIONS.none.start,
+  step: EFFECT_OPTIONS.none.step,
   connect: 'lower',
   format: {
     to: (value) => {
@@ -73,31 +73,31 @@ noUiSlider.create(sliderElement, {
 });
 // Слушатель обновления слайдера
 sliderElement.noUiSlider.on('update', () => {
-  const config = EFFECTS_CONFIG[selectedEffect];
+  const effectOptions = EFFECT_OPTIONS[selectedEffect];
   const sliderValue = Number(sliderElement.noUiSlider.get());
   if (selectedEffect === 'none') {
-    sliderContainer.classList.add('hidden');
-    imgUploadPreview.style.filter = '';
+    sliderContainerElement.classList.add('hidden');
+    imgUploadPreviewElement.style.filter = '';
     sliderLevelElement.value = '';
   } else {
-    sliderContainer.classList.remove('hidden');
+    sliderContainerElement.classList.remove('hidden');
     sliderLevelElement.value = sliderValue;
     // Собираем строку фильтра динамически из названия и единицы измерения
-    imgUploadPreview.style.filter = `${config.filter}(${sliderValue}${config.unit})`;
+    imgUploadPreviewElement.style.filter = `${effectOptions.filter}(${sliderValue}${effectOptions.unit})`;
   }
 });
 
 // Обработчик переключения радиокнопок
-effectsList.addEventListener('change', (evt) => {
+effectsListElement.addEventListener('change', (evt) => {
   selectedEffect = evt.target.value;
-  const config = EFFECTS_CONFIG[selectedEffect];
-  if (!config) {
+  const effectOptions = EFFECT_OPTIONS[selectedEffect];
+  if (!effectOptions) {
     return;
   }
   sliderElement.noUiSlider.updateOptions({
-    range: config.range,
-    start: config.start,
-    step: config.step,
+    range: effectOptions.range,
+    start: effectOptions.start,
+    step: effectOptions.step,
   });
 });
 
@@ -105,9 +105,9 @@ effectsList.addEventListener('change', (evt) => {
 const resetEffects = () => {
   selectedEffect = 'none';
   sliderElement.noUiSlider.updateOptions({
-    range: EFFECTS_CONFIG.none.range,
-    start: EFFECTS_CONFIG.none.start,
-    step: EFFECTS_CONFIG.none.step,
+    range: EFFECT_OPTIONS.none.range,
+    start: EFFECT_OPTIONS.none.start,
+    step: EFFECT_OPTIONS.none.step,
   });
 };
 export {resetEffects};

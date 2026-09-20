@@ -10,8 +10,8 @@ const getRandomInteger = (min, max) => {
 
 //Функция показа сообщения ошибки загрузки фото с сервера
 const showDataError = () => {
-  const errorTemplate = document.querySelector('#data-error');
-  const errorFragment = errorTemplate.content.cloneNode(true);
+  const errorTemplateElement = document.querySelector('#data-error');
+  const errorFragment = errorTemplateElement.content.cloneNode(true);
   const errorElement = errorFragment.querySelector('.data-error');
   document.body.append(errorFragment);
   setTimeout(() => {
@@ -23,8 +23,8 @@ const showDataError = () => {
 const showMessage = (type) => {
   const template = document.querySelector(`#${type}`).content;
   const fragment = template.cloneNode(true);
-  const element = fragment.querySelector(`.${type}`);
-  const button = element.querySelector(`.${type}__button`);
+  const messageElement = fragment.querySelector(`.${type}`);
+  const messageButtonElement = messageElement.querySelector(`.${type}__button`);
   // Обработчик закрытия сообщения по Escape
   const onDocumentKeydown = (evt) => {
     if (evt.key === 'Escape') {
@@ -37,7 +37,7 @@ const showMessage = (type) => {
   };
   // Удаляем сообщение и снимаем обработчик keydown с document
   function closeMessage() {
-    element.remove();
+    messageElement.remove();
     document.removeEventListener('keydown', onDocumentKeydown, type === 'error');
   }
 
@@ -45,10 +45,10 @@ const showMessage = (type) => {
   const onMessageButtonClick = () => {
     closeMessage();
   };
-  button.addEventListener('click', onMessageButtonClick);
+  messageButtonElement.addEventListener('click', onMessageButtonClick);
   // Закрытие по клику на оверлей (вне самого окна)
-  element.addEventListener('click', (evt) => {
-    if (evt.target === element) {
+  messageElement.addEventListener('click', (evt) => {
+    if (evt.target === messageElement) {
       closeMessage();
     }
   });
