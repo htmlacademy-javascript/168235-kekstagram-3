@@ -2,6 +2,8 @@ import {resetScale} from './scale.js';
 import {resetEffects} from './effects.js';
 import {sendData} from './api.js';
 import {showSuccess, showError} from './utils.js';
+const DEFAULT_IMAGE_URL = 'img/upload-default-image.jpg';
+const FILE_TYPES = ['.jpg', '.jpeg', '.png', '.webp'];
 // создаем регулярное выражение для проверки хэштегов
 const HASHTAG_PATTERN = /^#[а-яёa-z0-9]{1,19}$/i;
 // константы для валидации формы
@@ -23,6 +25,8 @@ const uploadSubmitButton = uploadForm.querySelector('.img-upload__submit');
 const uploadPreview = uploadForm.querySelector('.img-upload__preview img');
 const effectPreviews = uploadForm.querySelectorAll('.effects__preview');
 let imageUrl = null;
+// Переменная для хранения ID текущей активной формы
+let currentUploadSessionId = 0;
 // Подключаем библиотеку Pristine для валидации формы. Она уже подключена в index.html, поэтому здесь мы просто создаём экземпляр.
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -35,9 +39,6 @@ const getHashtags = (value) => value.trim().toLowerCase().split(/\s+/).filter((t
 
 // функция для проверки валидности хэштегов
 const validateHashtags = (value) => {
-  if (value.trim() === '') {
-    return true; // пустая строка допустима;
-  }
   const tags = getHashtags(value);
   return tags.every((tag) => HASHTAG_PATTERN.test(tag));
 };
@@ -97,6 +98,8 @@ const onDocumentKeydown = (evt) => {
 
 // функция закрытия формы загрузки изображения
 function closeUploadForm() {
+  uploadSubmitButton.disabled = false;
+  currentUploadSessionId += 1;
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   uploadForm.reset();
@@ -105,6 +108,10 @@ function closeUploadForm() {
   document.removeEventListener('keydown', onDocumentKeydown);
   // Очистить ошибки валидации и сбросить классы CSS
   pristine.reset();
+  uploadPreview.src = DEFAULT_IMAGE_URL;
+  effectPreviews.forEach((effectPreview) => {
+    effectPreview.style.backgroundImage = '';
+  });
   if (imageUrl) {
     URL.revokeObjectURL(imageUrl);
     imageUrl = null;
@@ -112,11 +119,19 @@ function closeUploadForm() {
 }
 
 // функция открытия формы загрузки изображения
-const openUploadForm = () => {
+const onUploadFileChange = () => {
   const file = uploadFileInput.files[0];
   if (!file) {
     return;
   }
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((extension) => fileName.endsWith(extension));
+  if (!matches) {
+    uploadFileInput.value = '';
+    showError();
+    return;
+  }
+  currentUploadSessionId += 1;
   imageUrl = URL.createObjectURL(file);
   uploadPreview.src = imageUrl;
   effectPreviews.forEach((effectPreview) => {
@@ -126,11 +141,13 @@ const openUploadForm = () => {
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
 };
-
+const onUploadCancelClick = () => {
+  closeUploadForm();
+};
 // обработчики событий
-uploadFileInput.addEventListener('change', openUploadForm);
+uploadFileInput.addEventListener('change', onUploadFileChange);
 // закрытие формы по кнопке "Отмена"
-uploadCancelButton.addEventListener('click', closeUploadForm);
+uploadCancelButton.addEventListener('click', onUploadCancelClick);
 
 // функция отмены всплытия события при нажатии клавиши Escape в текстовых полях
 const onInputEscapeKeydown = (evt) => {
@@ -152,15 +169,26 @@ uploadForm.addEventListener('submit', (evt) => {
   }
   const formData = new FormData(uploadForm);
   uploadSubmitButton.disabled = true;
+  const uploadSessionId = currentUploadSessionId;
   sendData(formData)
     .then(() => {
+      if (uploadSessionId !== currentUploadSessionId) {
+        return;
+      }
       closeUploadForm();
       showSuccess();
     })
-    .catch(
-      showError
+    .catch(() => {
+      if (uploadSessionId !== currentUploadSessionId) {
+        return;
+      }
+      showError();
+    }
     )
     .finally(() => {
+      if (uploadSessionId !== currentUploadSessionId) {
+        return;
+      }
       uploadSubmitButton.disabled = false;
     });
 });

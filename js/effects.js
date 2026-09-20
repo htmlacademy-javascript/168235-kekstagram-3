@@ -54,16 +54,25 @@ const effectsList = document.querySelector('.effects__list');
 // контейнер слайдера, который будет скрываться при выборе эффекта "Оригинал"
 const sliderContainer = document.querySelector('.img-upload__effect-level');
 
+let selectedEffect = 'none';
 // Создаём слайдер с помощью noUiSlider
 noUiSlider.create(sliderElement, {
-  range: { min: 0, max: 1},
-  start: 1,
-  step: 0.1,
+  range: EFFECTS_CONFIG.none.range,
+  start: EFFECTS_CONFIG.none.start,
+  step: EFFECTS_CONFIG.none.step,
   connect: 'lower',
+  format: {
+    to: (value) => {
+      if (Number.isInteger(value)) {
+        return value.toFixed(0);
+      }
+      return value.toFixed(1);
+    },
+    from: (value) => parseFloat(value),
+  },
 });
 // Слушатель обновления слайдера
 sliderElement.noUiSlider.on('update', () => {
-  const selectedEffect = document.querySelector('.effects__radio:checked').value;
   const config = EFFECTS_CONFIG[selectedEffect];
   const sliderValue = Number(sliderElement.noUiSlider.get());
   if (selectedEffect === 'none') {
@@ -80,7 +89,7 @@ sliderElement.noUiSlider.on('update', () => {
 
 // Обработчик переключения радиокнопок
 effectsList.addEventListener('change', (evt) => {
-  const selectedEffect = evt.target.value;
+  selectedEffect = evt.target.value;
   const config = EFFECTS_CONFIG[selectedEffect];
   if (!config) {
     return;
@@ -94,10 +103,11 @@ effectsList.addEventListener('change', (evt) => {
 
 // Функция для сброса эффектов при закрытии формы
 const resetEffects = () => {
+  selectedEffect = 'none';
   sliderElement.noUiSlider.updateOptions({
-    range: { min: 0, max: 1 },
-    start: 1,
-    step: 0.1,
+    range: EFFECTS_CONFIG.none.range,
+    start: EFFECTS_CONFIG.none.start,
+    step: EFFECTS_CONFIG.none.step,
   });
 };
 export {resetEffects};

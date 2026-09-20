@@ -1,5 +1,6 @@
 // Находим полноразмерное окно и все элементы, данные которых будут меняться.
 const COMMENTS_PER_PORTION = 5;
+const AVATAR_SIZE = 35;
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureImage = bigPicture.querySelector('.big-picture__img img');
 const likesCount = bigPicture.querySelector('.likes-count');
@@ -24,8 +25,8 @@ const createComment = ({avatar, name, message}) => {
   picture.classList.add('social__picture');
   picture.src = avatar;
   picture.alt = name;
-  picture.width = 35;
-  picture.height = 35;
+  picture.width = AVATAR_SIZE;
+  picture.height = AVATAR_SIZE;
 
   text.classList.add('social__text');
   // textContent вставляет сообщение как текст и не интерпретирует его как HTML.
@@ -96,9 +97,10 @@ const openBigPicture = ({url, description, likes, comments}) => {
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
 };
-
-commentsLoader.addEventListener('click', renderNextComments);
+const onCommentsLoaderClick = () => renderNextComments();
+commentsLoader.addEventListener('click', onCommentsLoaderClick);
+const onBigPictureCancelClick = () => closeBigPicture();
 // Кнопка существует всё время жизни страницы, поэтому обработчик ставится один раз.
-closeButton.addEventListener('click', closeBigPicture);
+closeButton.addEventListener('click', onBigPictureCancelClick);
 
 export {openBigPicture};

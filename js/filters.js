@@ -2,7 +2,7 @@ import {getRandomInteger} from './utils.js';
 
 const RANDOM_PICTURES_COUNT = 10;
 const filtersElement = document.querySelector('.img-filters');
-
+let activeButton = filtersElement.querySelector('.img-filters__button--active');
 const showFilters = () => {
   filtersElement.classList.remove('img-filters--inactive');
 };
@@ -24,9 +24,9 @@ const getRandomPictures = (pictures) => {
 };
 
 const setActiveFilter = (button) => {
-  const activeButton = filtersElement.querySelector('.img-filters__button--active');
   activeButton.classList.remove('img-filters__button--active');
   button.classList.add('img-filters__button--active');
+  activeButton = button;
 };
 
 const initFilters = (pictures, onFilterChange) => {
