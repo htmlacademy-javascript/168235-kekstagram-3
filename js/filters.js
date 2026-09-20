@@ -2,7 +2,7 @@ import {getRandomInteger} from './utils.js';
 
 const RANDOM_PICTURES_COUNT = 10;
 const filtersElement = document.querySelector('.img-filters');
-let activeButton = filtersElement.querySelector('.img-filters__button--active');
+let activeButtonElement = filtersElement.querySelector('.img-filters__button--active');
 const showFilters = () => {
   filtersElement.classList.remove('img-filters--inactive');
 };
@@ -23,28 +23,28 @@ const getRandomPictures = (pictures) => {
   return randomPictures;
 };
 
-const setActiveFilter = (button) => {
-  activeButton.classList.remove('img-filters__button--active');
-  button.classList.add('img-filters__button--active');
-  activeButton = button;
+const setActiveFilter = (buttonElement) => {
+  activeButtonElement.classList.remove('img-filters__button--active');
+  buttonElement.classList.add('img-filters__button--active');
+  activeButtonElement = buttonElement;
 };
 
-const initFilters = (pictures, onFilterChange) => {
-  const discussedButton = filtersElement.querySelector('#filter-discussed');
-  const defaultButton = filtersElement.querySelector('#filter-default');
-  const randomButton = filtersElement.querySelector('#filter-random');
-  discussedButton.addEventListener('click', () => {
-    setActiveFilter(discussedButton);
+const initializeFilters = (pictures, onFilterChange) => {
+  const discussedButtonElement = filtersElement.querySelector('#filter-discussed');
+  const defaultButtonElement = filtersElement.querySelector('#filter-default');
+  const randomButtonElement = filtersElement.querySelector('#filter-random');
+  discussedButtonElement.addEventListener('click', () => {
+    setActiveFilter(discussedButtonElement);
     const discussedPictures = getDiscussedPictures(pictures);
     onFilterChange(discussedPictures);
   });
-  defaultButton.addEventListener('click', () => {
-    setActiveFilter(defaultButton);
+  defaultButtonElement.addEventListener('click', () => {
+    setActiveFilter(defaultButtonElement);
     onFilterChange(pictures);
   });
-  randomButton.addEventListener('click', () => {
-    setActiveFilter(randomButton);
+  randomButtonElement.addEventListener('click', () => {
+    setActiveFilter(randomButtonElement);
     onFilterChange(getRandomPictures(pictures));
   });
 };
-export {showFilters, initFilters};
+export {showFilters, initializeFilters};

@@ -1,10 +1,10 @@
 // Контейнер для миниатюр и шаблон одной фотографии.
-const picturesContainer = document.querySelector('.pictures');
-const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+const picturesContainerElement = document.querySelector('.pictures');
+const pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
 
 // onPictureClick — функция, которую нужно вызвать после клика по миниатюре.
 const renderPictures = (pictures, onPictureClick) => {
-  const pictureElements = picturesContainer.querySelectorAll('.picture');
+  const pictureElements = picturesContainerElement.querySelectorAll('.picture');
   pictureElements.forEach((pictureElement) => {
     pictureElement.remove();
   });
@@ -14,11 +14,11 @@ const renderPictures = (pictures, onPictureClick) => {
   pictures.forEach((picture) => {
     const {url, description, likes, comments} = picture;
     // Создаём копию шаблона и заполняем её данными фотографии.
-    const pictureElement = pictureTemplate.cloneNode(true);
-    const pictureImage = pictureElement.querySelector('.picture__img');
+    const pictureElement = pictureTemplateElement.cloneNode(true);
+    const pictureImageElement = pictureElement.querySelector('.picture__img');
 
-    pictureImage.src = url;
-    pictureImage.alt = description;
+    pictureImageElement.src = url;
+    pictureImageElement.alt = description;
     pictureElement.querySelector('.picture__likes').textContent = likes;
     pictureElement.querySelector('.picture__comments').textContent = comments.length;
 
@@ -35,7 +35,7 @@ const renderPictures = (pictures, onPictureClick) => {
   });
 
   // Вставляем готовые миниатюры в контейнер на странице.
-  picturesContainer.append(picturesFragment);
+  picturesContainerElement.append(picturesFragment);
 };
 
 export {renderPictures};

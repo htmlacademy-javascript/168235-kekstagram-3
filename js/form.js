@@ -3,7 +3,7 @@ import {resetEffects} from './effects.js';
 import {sendData} from './api.js';
 import {showSuccess, showError} from './utils.js';
 const DEFAULT_IMAGE_URL = 'img/upload-default-image.jpg';
-const FILE_TYPES = ['.jpg', '.jpeg', '.png', '.webp'];
+const FILE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 // создаем регулярное выражение для проверки хэштегов
 const HASHTAG_PATTERN = /^#[а-яёa-z0-9]{1,19}$/i;
 // константы для валидации формы
@@ -16,19 +16,19 @@ const ERROR_UNIQUE_HASHTAGS = 'Хэштеги не должны повторят
 // константа ошибки валидации описания
 const ERROR_DESCRIPTION_LENGTH = `Длина комментария не может составлять больше ${MAX_DESCRIPTION_LENGTH} символов`;
 // Получаем элементы формы загрузки изображения
-const uploadForm = document.querySelector('.img-upload__form');
-const uploadFileInput = uploadForm.querySelector('.img-upload__input');
-const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
-const uploadCancelButton = uploadForm.querySelector('.img-upload__cancel');
-const hashtagsInput = uploadForm.querySelector('.text__hashtags');
-const uploadSubmitButton = uploadForm.querySelector('.img-upload__submit');
-const uploadPreview = uploadForm.querySelector('.img-upload__preview img');
-const effectPreviews = uploadForm.querySelectorAll('.effects__preview');
+const uploadFormElement = document.querySelector('.img-upload__form');
+const uploadFileInputElement = uploadFormElement.querySelector('.img-upload__input');
+const uploadOverlayElement = uploadFormElement.querySelector('.img-upload__overlay');
+const uploadCancelButtonElement = uploadFormElement.querySelector('.img-upload__cancel');
+const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
+const uploadSubmitButtonElement = uploadFormElement.querySelector('.img-upload__submit');
+const uploadPreviewElement = uploadFormElement.querySelector('.img-upload__preview img');
+const effectPreviewElements = uploadFormElement.querySelectorAll('.effects__preview');
 let imageUrl = null;
 // Переменная для хранения ID текущей активной формы
 let currentUploadSessionId = 0;
 // Подключаем библиотеку Pristine для валидации формы. Она уже подключена в index.html, поэтому здесь мы просто создаём экземпляр.
-const pristine = new Pristine(uploadForm, {
+const pristine = new Pristine(uploadFormElement, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__field-wrapper--error'
@@ -56,34 +56,34 @@ const isHashtagsCountValid = (value) => {
   return tags.length <= MAX_HASHTAGS_COUNT;
 };
 // поле описания
-const descriptionInput = uploadForm.querySelector('.text__description');
+const descriptionInputElement = uploadFormElement.querySelector('.text__description');
 // константы для валидации формы
 const isDescriptionValid = (description) => description.length <= MAX_DESCRIPTION_LENGTH;
 
 // проверка валидности описания
 pristine.addValidator(
-  descriptionInput,
+  descriptionInputElement,
   isDescriptionValid,
   ERROR_DESCRIPTION_LENGTH
 );
 
 // проверка валидности хэштегов
 pristine.addValidator(
-  hashtagsInput,
+  hashtagsInputElement,
   validateHashtags,
   ERROR_INVALID_HASHTAG
 );
 
 // проверка количества хэштегов
 pristine.addValidator(
-  hashtagsInput,
+  hashtagsInputElement,
   isHashtagsCountValid,
   ERROR_HASHTAGS_COUNT
 );
 
 // проверка уникальности хэштегов
 pristine.addValidator(
-  hashtagsInput,
+  hashtagsInputElement,
   areHashtagsUnique,
   ERROR_UNIQUE_HASHTAGS
 );
@@ -98,19 +98,19 @@ const onDocumentKeydown = (evt) => {
 
 // функция закрытия формы загрузки изображения
 function closeUploadForm() {
-  uploadSubmitButton.disabled = false;
+  uploadSubmitButtonElement.disabled = false;
   currentUploadSessionId += 1;
-  uploadOverlay.classList.add('hidden');
+  uploadOverlayElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  uploadForm.reset();
+  uploadFormElement.reset();
   resetScale();
   resetEffects();
   document.removeEventListener('keydown', onDocumentKeydown);
   // Очистить ошибки валидации и сбросить классы CSS
   pristine.reset();
-  uploadPreview.src = DEFAULT_IMAGE_URL;
-  effectPreviews.forEach((effectPreview) => {
-    effectPreview.style.backgroundImage = '';
+  uploadPreviewElement.src = DEFAULT_IMAGE_URL;
+  effectPreviewElements.forEach((effectPreviewElement) => {
+    effectPreviewElement.style.backgroundImage = '';
   });
   if (imageUrl) {
     URL.revokeObjectURL(imageUrl);
@@ -120,24 +120,24 @@ function closeUploadForm() {
 
 // функция открытия формы загрузки изображения
 const onUploadFileChange = () => {
-  const file = uploadFileInput.files[0];
+  const file = uploadFileInputElement.files[0];
   if (!file) {
     return;
   }
   const fileName = file.name.toLowerCase();
-  const matches = FILE_TYPES.some((extension) => fileName.endsWith(extension));
+  const matches = FILE_EXTENSIONS.some((extension) => fileName.endsWith(extension));
   if (!matches) {
-    uploadFileInput.value = '';
+    uploadFileInputElement.value = '';
     showError();
     return;
   }
   currentUploadSessionId += 1;
   imageUrl = URL.createObjectURL(file);
-  uploadPreview.src = imageUrl;
-  effectPreviews.forEach((effectPreview) => {
-    effectPreview.style.backgroundImage = `url("${imageUrl}")`;
+  uploadPreviewElement.src = imageUrl;
+  effectPreviewElements.forEach((effectPreviewElement) => {
+    effectPreviewElement.style.backgroundImage = `url("${imageUrl}")`;
   });
-  uploadOverlay.classList.remove('hidden');
+  uploadOverlayElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
 };
@@ -145,9 +145,9 @@ const onUploadCancelClick = () => {
   closeUploadForm();
 };
 // обработчики событий
-uploadFileInput.addEventListener('change', onUploadFileChange);
+uploadFileInputElement.addEventListener('change', onUploadFileChange);
 // закрытие формы по кнопке "Отмена"
-uploadCancelButton.addEventListener('click', onUploadCancelClick);
+uploadCancelButtonElement.addEventListener('click', onUploadCancelClick);
 
 // функция отмены всплытия события при нажатии клавиши Escape в текстовых полях
 const onInputEscapeKeydown = (evt) => {
@@ -157,18 +157,18 @@ const onInputEscapeKeydown = (evt) => {
 };
 
 // обработчик текстооыйх полей, чтобы при фокусе на них не закрывалась форма по Escape
-hashtagsInput.addEventListener('keydown', onInputEscapeKeydown);
-descriptionInput.addEventListener('keydown', onInputEscapeKeydown);
+hashtagsInputElement.addEventListener('keydown', onInputEscapeKeydown);
+descriptionInputElement.addEventListener('keydown', onInputEscapeKeydown);
 
 // обработчик события отправки формы
-uploadForm.addEventListener('submit', (evt) => {
+uploadFormElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (!isValid) {
     return;
   }
-  const formData = new FormData(uploadForm);
-  uploadSubmitButton.disabled = true;
+  const formData = new FormData(uploadFormElement);
+  uploadSubmitButtonElement.disabled = true;
   const uploadSessionId = currentUploadSessionId;
   sendData(formData)
     .then(() => {
@@ -189,6 +189,6 @@ uploadForm.addEventListener('submit', (evt) => {
       if (uploadSessionId !== currentUploadSessionId) {
         return;
       }
-      uploadSubmitButton.disabled = false;
+      uploadSubmitButtonElement.disabled = false;
     });
 });
